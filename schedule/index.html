@@ -128,7 +128,7 @@ body.dark .cal-ev.bday{background:#3a2f18;color:#e7c989;}
     </div>
     <div class="brand">
       <a href="../"><div class="logo">NAO<em>story</em></div></a>
-      <div class="tagline">나오와 함께하는 데일리 매거진</div>
+      <div class="tagline">소통과 게임으로 노는 데일리 매거진</div>
     </div>
     <div class="right">
       <button class="btn-join" onclick="openInquiry()">문의</button>
@@ -202,7 +202,7 @@ function cell(day,out,m,y,today){
   var ev='',click='';
   if(!out){
     var key=(dt.getMonth()+1)+'-'+dt.getDate(), fk=dt.getFullYear()+'-'+key;
-    if(DB_EVENTS[fk]){ ev+=DB_EVENTS[fk].map(function(x){var hl=(x.highlight||x.type==='특별')?' bday':'';var c=calChip(x.time,x.title,x.type,hl);if(x.title2||x.time2||x.type2){c+=calChip(x.time2,x.title2,x.type2,hl);}return c;}).join(''); cls+=' has-ev'; click=' onclick="openDay(\''+fk+'\')"'; }
+    if(DB_EVENTS[fk]){ ev+=DB_EVENTS[fk].map(function(x){var c=calChip(x.time,x.title,x.type,x.color,x.highlight);if(x.title2||x.time2||x.type2){c+=calChip(x.time2,x.title2,x.type2,x.color,x.highlight);}return c;}).join(''); cls+=' has-ev'; click=' onclick="openDay(\''+fk+'\')"'; }
     if(today&&dt.getTime()===today.getTime())cls+=' today';
   }
   return '<div class="'+cls+'"'+click+'><span class="num">'+day+'</span>'+ev+'</div>';
@@ -231,11 +231,19 @@ async function loadSchedule(){
   }catch(err){ console.error('schedule', err); }
 }
 function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-function calChip(time,title,type,hl){
+var CAL_COLORS={
+  green:['#d6f0e4','#1f7a52'], pink:['#fbe0ea','#c43d6e'], yellow:['#fff0d6','#b07d18'],
+  orange:['#ffe6d0','#c2691f'], blue:['#dceaf9','#2a6fb0'], purple:['#ece0f7','#7a4bb0'],
+  red:['#ffe0e0','#d6334d'], gray:['#eceaeb','#8a8285']
+};
+function calChip(time,title,type,color,hl){
   var off=(type==='휴방');
   var t=esc(title || (off?'휴방':'방송'));
   var txt=(time && String(time).trim()) ? (esc(time)+' : '+t) : t;
-  return '<span class="cal-ev'+hl+(off?' off':'')+'">'+txt+'</span>';
+  var pair = off ? ['var(--line)','var(--soft)'] : (CAL_COLORS[color]||CAL_COLORS.pink);
+  var sty='background:'+pair[0]+';color:'+pair[1];
+  if(hl) sty+=';outline:1.5px solid '+pair[1]+';outline-offset:-1px';
+  return '<span class="cal-ev" style="'+sty+'">'+txt+'</span>';
 }
 function openDay(fk){
   var list=DB_EVENTS[fk]||[]; if(!list.length) return;

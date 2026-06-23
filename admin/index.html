@@ -202,7 +202,7 @@
       <div class="card-title">일정 추가</div>
       <div class="form-grid">
         <div class="form-field"><label class="input-label">날짜 *</label><input class="input" id="sch-date" type="date"></div>
-        <div class="form-field"><label class="input-label">유형</label>
+        <div class="form-field"><label class="input-label">1부 유형</label>
           <select class="input" id="sch-type"><option value="방송">방송</option><option value="휴방">휴방</option></select>
         </div>
         <div class="form-field full">
@@ -222,6 +222,9 @@
         <div class="form-field"><label class="input-label">1부 제목 (휴방이면 비워도 됨)</label><input class="input" id="sch-title" placeholder="방송 제목"></div>
         <div class="form-field"><label class="input-label">2부 시간 (선택)</label><input class="input" id="sch-time2" placeholder="오후 9시"></div>
         <div class="form-field"><label class="input-label">2부 제목 (선택)</label><input class="input" id="sch-title2" placeholder="2부 있을 경우"></div>
+        <div class="form-field"><label class="input-label">2부 유형 (2부 있을 때)</label>
+          <select class="input" id="sch-type2"><option value="">— 없음 —</option><option value="방송">방송</option><option value="휴방">휴방</option></select>
+        </div>
         <div class="form-field full"><label class="input-label">설명 (선택)</label><textarea class="input" id="sch-desc" rows="2"></textarea></div>
         <div class="form-field full"><label><input type="checkbox" id="sch-hl"> ⭐ 하이라이트 (달력에서 강조)</label></div>
         <div class="form-field full" style="display:flex;justify-content:flex-end"><button class="btn btn-primary" onclick="addSchedule()">+ 추가</button></div>
@@ -538,6 +541,7 @@
       time: document.getElementById('sch-time').value,
       time2: document.getElementById('sch-time2').value,
       title2: document.getElementById('sch-title2').value.trim(),
+      type2: document.getElementById('sch-type2').value,
       description: document.getElementById('sch-desc').value.trim(),
       highlight: document.getElementById('sch-hl').checked
     };
@@ -545,6 +549,7 @@
     if (ok) {
       showToast('✅ 추가!');
       ['sch-title','sch-date','sch-time','sch-time2','sch-title2','sch-desc'].forEach(id=>document.getElementById(id).value='');
+      document.getElementById('sch-type2').value='';
       document.getElementById('sch-hl').checked = false;
       loadSchedule();
     } else showToast('❌ 실패');
