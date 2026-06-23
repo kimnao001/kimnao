@@ -104,6 +104,7 @@ textarea.iq-input{resize:vertical;}
 .day-item-d{font-size:13px;color:var(--soft);margin-top:5px;line-height:1.6;}
 .cal-ev{font-size:10px;font-weight:700;background:var(--pink-soft);color:var(--pink-dark);border-radius:5px;padding:2px 5px;line-height:1.3;}
 .cal-ev.bday{background:#fff0d6;color:#c98a2e;}
+.cal-ev.off{background:var(--line);color:var(--soft);}
 body.dark .cal-ev.bday{background:#3a2f18;color:#e7c989;}
 .upcoming{margin-top:36px;}
 .sch{display:flex;align-items:center;gap:18px;padding:14px 4px;border-bottom:1px solid var(--line);}
@@ -127,7 +128,7 @@ body.dark .cal-ev.bday{background:#3a2f18;color:#e7c989;}
     </div>
     <div class="brand">
       <a href="../"><div class="logo">NAO<em>story</em></div></a>
-      <div class="tagline">나오와 함께하는 데일리 매거진</div>
+      <div class="tagline">소통과 게임으로 노는 데일리 매거진</div>
     </div>
     <div class="right">
       <button class="btn-join" onclick="openInquiry()">문의</button>
@@ -201,7 +202,7 @@ function cell(day,out,m,y,today){
   var ev='',click='';
   if(!out){
     var key=(dt.getMonth()+1)+'-'+dt.getDate(), fk=dt.getFullYear()+'-'+key;
-    if(DB_EVENTS[fk]){ ev+=DB_EVENTS[fk].map(function(x){var hl=(x.type==='특별'||x.highlight)?' bday':'';var c='<span class="cal-ev'+hl+'">'+(x.title||'방송')+'</span>';if(x.title2||x.time2){c+='<span class="cal-ev'+hl+'">'+(x.title2||'2부')+'</span>';}return c;}).join(''); cls+=' has-ev'; click=' onclick="openDay(\''+fk+'\')"'; }
+    if(DB_EVENTS[fk]){ ev+=DB_EVENTS[fk].map(function(x){var hl=(x.highlight||x.type==='특별')?' bday':'';var c=calChip(x.time,x.title,x.type,hl);if(x.title2||x.time2||x.type2){c+=calChip(x.time2,x.title2,x.type2,hl);}return c;}).join(''); cls+=' has-ev'; click=' onclick="openDay(\''+fk+'\')"'; }
     if(today&&dt.getTime()===today.getTime())cls+=' today';
   }
   return '<div class="'+cls+'"'+click+'><span class="num">'+day+'</span>'+ev+'</div>';
@@ -230,6 +231,12 @@ async function loadSchedule(){
   }catch(err){ console.error('schedule', err); }
 }
 function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function calChip(time,title,type,hl){
+  var off=(type==='휴방');
+  var t=esc(title || (off?'휴방':'방송'));
+  var txt=(time && String(time).trim()) ? (esc(time)+' : '+t) : t;
+  return '<span class="cal-ev'+hl+(off?' off':'')+'">'+txt+'</span>';
+}
 function openDay(fk){
   var list=DB_EVENTS[fk]||[]; if(!list.length) return;
   var pp=fk.split('-');
@@ -239,9 +246,11 @@ function openDay(fk){
     var h='<div class="day-item">';
     h+='<div class="day-item-t">'+esc(e.title||'방송')+'</div>';
     if(meta1) h+='<div class="day-item-s">'+meta1+'</div>';
-    if(e.title2||e.time2){
-      h+='<div class="day-item-t" style="margin-top:10px">'+esc(e.title2||'2부')+'</div>';
-      if(e.time2) h+='<div class="day-item-s">'+esc(e.time2)+'</div>';
+    if(e.title2||e.time2||e.type2){
+      var off2=(e.type2==='휴방');
+      h+='<div class="day-item-t" style="margin-top:10px'+(off2?';color:var(--soft)':'')+'">'+esc(e.title2||(off2?'휴방':'2부'))+'</div>';
+      var meta2=[e.time2,e.type2].filter(Boolean).map(esc).join(' · ');
+      if(meta2) h+='<div class="day-item-s">'+meta2+'</div>';
     }
     if(e.description) h+='<div class="day-item-d">'+esc(e.description)+'</div>';
     return h+'</div>';
