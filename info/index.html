@@ -9,7 +9,7 @@
 <style>
 
 :root{
-  --ink:#232223; --bg:#ffffff; --paper:#fffdf8; --soft:#a7989a; --line:#efe7e8;
+  --ink:#232223; --bg:#ffffff; --paper:#ffffff; --soft:#a7989a; --line:#efe7e8;
   --pink:#80011f; --pink-dark:#5a0015; --pink-soft:#f8e8eb;
   --blue:#a8475a; --blue-dark:#7a2435; --blue-soft:#f7edef;
   --serif:'Playfair Display','Gowun Batang',serif;
@@ -25,7 +25,7 @@ body.dark{
   --blue:#d98a99; --blue-dark:#f0b5c0; --blue-soft:#2a1418;
 }
 *{margin:0;padding:0;box-sizing:border-box;}
-html{scroll-behavior:smooth;background:#eceef1;}
+html{scroll-behavior:smooth;background:#f5f3f4;}
 html:has(body.dark){background:#0a0e13;}
 .sheet{background:var(--bg);max-width:1200px;margin:34px auto 0;box-shadow:0 26px 80px rgba(20,30,50,.26);overflow:hidden;transition:background .25s;}
 @media(max-width:1260px){.sheet{margin:16px 14px 0;}}
@@ -111,7 +111,7 @@ textarea.iq-input{resize:vertical;}
 .vod-thumb .play{width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.92);display:flex;align-items:center;justify-content:center;color:var(--pink-dark);font-size:15px;padding-left:3px;}
 .vod-thumb .tag{position:absolute;top:8px;left:8px;background:rgba(0,0,0,.42);color:#fff;font-size:10px;font-weight:800;padding:3px 8px;border-radius:5px;}
 .vod-title{padding:11px 13px;font-size:14px;font-weight:700;}
-.links{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+.links{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;}
 .link-btn{display:flex;align-items:center;justify-content:center;gap:6px;border:1px solid var(--line);border-radius:9px;padding:13px;font-weight:700;font-size:13.5px;transition:.16s;}
 .link-btn:hover{background:var(--pink-soft);border-color:var(--pink-soft);color:var(--pink-dark);}
 .link-btn.wide{grid-column:1/-1;background:var(--pink-soft);border-color:var(--pink-soft);color:var(--pink-dark);}
@@ -190,7 +190,8 @@ textarea.iq-input{resize:vertical;}
         <div class="links">
           <a class="link-btn" id="linkYoutube" href="https://www.youtube.com/@spkimnao" target="_blank">▶️ YouTube</a>
           <a class="link-btn" id="linkMfancim" href="https://fancimm.com/profile/171584" target="_blank">📱 팬심M</a>
-          <a class="link-btn" id="linkFancim" href="https://cafe.naver.com/soopkimnao" target="_blank">💚 카페</a>
+          <a class="link-btn" id="linkFancim" href="https://fancimm.com/profile/171584" target="_blank">💜 팬심</a>
+          <a class="link-btn" id="linkCafe" href="https://cafe.naver.com/soopkimnao" target="_blank">💚 카페</a>
           <a class="link-btn" id="linkSoop" href="https://www.sooplive.com/station/spkimnao" target="_blank">🟦 SOOP</a>
           <a class="link-btn wide" id="linkHeart" href="https://fancimm.com/profile/171584" target="_blank">💙 팬심M 입장 코드는 문의해 주세요!</a>
         </div>
@@ -278,6 +279,7 @@ async function loadProfile(){
     _href('linkYoutube', sv['link-youtube']);
     _href('linkMfancim', sv['link-mfancim']);
     _href('linkFancim',  sv['link-fancim']);
+    _href('linkCafe',    sv['link-cafe']);
     _href('linkSoop',    sv['link-soop']);
     _href('linkHeart',   sv['link-heart']);
 

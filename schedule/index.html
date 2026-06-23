@@ -9,7 +9,7 @@
 <style>
 
 :root{
-  --ink:#232223; --bg:#ffffff; --paper:#fffdf8; --soft:#a7989a; --line:#efe7e8;
+  --ink:#232223; --bg:#ffffff; --paper:#ffffff; --soft:#a7989a; --line:#efe7e8;
   --pink:#80011f; --pink-dark:#5a0015; --pink-soft:#f8e8eb;
   --blue:#a8475a; --blue-dark:#7a2435; --blue-soft:#f7edef;
   --serif:'Playfair Display','Gowun Batang',serif;
@@ -25,7 +25,7 @@ body.dark{
   --blue:#d98a99; --blue-dark:#f0b5c0; --blue-soft:#2a1418;
 }
 *{margin:0;padding:0;box-sizing:border-box;}
-html{scroll-behavior:smooth;background:#eceef1;}
+html{scroll-behavior:smooth;background:#f5f3f4;}
 html:has(body.dark){background:#0a0e13;}
 .sheet{background:var(--bg);max-width:1200px;margin:34px auto 0;box-shadow:0 26px 80px rgba(20,30,50,.26);overflow:hidden;transition:background .25s;}
 @media(max-width:1260px){.sheet{margin:16px 14px 0;}}
@@ -199,7 +199,7 @@ function cell(day,out,m,y,today){
   var ev='',click='';
   if(!out){
     var key=(dt.getMonth()+1)+'-'+dt.getDate(), fk=dt.getFullYear()+'-'+key;
-    if(DB_EVENTS[fk]){ ev+=DB_EVENTS[fk].map(function(x){return '<span class="cal-ev'+((x.type==='특별'||x.highlight)?' bday':'')+'">'+(x.title||'방송')+'</span>';}).join(''); cls+=' has-ev'; click=' onclick="openDay(\''+fk+'\')"'; }
+    if(DB_EVENTS[fk]){ ev+=DB_EVENTS[fk].map(function(x){var hl=(x.type==='특별'||x.highlight)?' bday':'';var c='<span class="cal-ev'+hl+'">'+(x.title||'방송')+'</span>';if(x.title2||x.time2){c+='<span class="cal-ev'+hl+'">'+(x.title2||'2부')+'</span>';}return c;}).join(''); cls+=' has-ev'; click=' onclick="openDay(\''+fk+'\')"'; }
     if(today&&dt.getTime()===today.getTime())cls+=' today';
   }
   return '<div class="'+cls+'"'+click+'><span class="num">'+day+'</span>'+ev+'</div>';
@@ -233,8 +233,16 @@ function openDay(fk){
   var pp=fk.split('-');
   document.getElementById('day-title').textContent=parseInt(pp[1],10)+'월 '+parseInt(pp[2],10)+'일 일정';
   document.getElementById('day-body').innerHTML=list.map(function(e){
-    var meta=[e.time,e.type].filter(Boolean).map(esc).join(' · ');
-    return '<div class="day-item"><div class="day-item-t">'+esc(e.title||'방송')+'</div>'+(meta?'<div class="day-item-s">'+meta+'</div>':'')+(e.description?'<div class="day-item-d">'+esc(e.description)+'</div>':'')+'</div>';
+    var meta1=[e.time,e.type].filter(Boolean).map(esc).join(' · ');
+    var h='<div class="day-item">';
+    h+='<div class="day-item-t">'+esc(e.title||'방송')+'</div>';
+    if(meta1) h+='<div class="day-item-s">'+meta1+'</div>';
+    if(e.title2||e.time2){
+      h+='<div class="day-item-t" style="margin-top:10px">'+esc(e.title2||'2부')+'</div>';
+      if(e.time2) h+='<div class="day-item-s">'+esc(e.time2)+'</div>';
+    }
+    if(e.description) h+='<div class="day-item-d">'+esc(e.description)+'</div>';
+    return h+'</div>';
   }).join('');
   document.getElementById('day-ov').classList.add('on');
 }
