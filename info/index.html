@@ -105,6 +105,12 @@ textarea.iq-input{resize:vertical;}
 .chip{display:inline-flex;align-items:center;background:var(--pink-soft);color:var(--pink-dark);border-radius:999px;padding:6px 14px;font-size:13.5px;font-weight:700;}
 .chip.gray{background:var(--line);color:var(--soft);}
 .content-list{display:flex;flex-direction:column;gap:8px;}
+.cpager{display:flex;justify-content:center;align-items:center;gap:7px;margin-top:18px;flex-wrap:wrap;}
+.cpager:empty{display:none;}
+.cpg-btn{min-width:34px;height:34px;padding:0 10px;border:1px solid var(--line);background:var(--paper);color:var(--soft);border-radius:9px;font-size:14px;font-weight:700;cursor:pointer;transition:all .15s;}
+.cpg-btn:hover:not(:disabled):not(.on){border-color:var(--pink);color:var(--pink);}
+.cpg-btn.on{background:var(--pink);border-color:var(--pink);color:#fff;}
+.cpg-btn:disabled{opacity:.35;cursor:default;}
 .content-row{display:flex;align-items:center;gap:14px;padding:13px 16px;border:1px solid var(--line);border-radius:11px;background:var(--paper);text-decoration:none;color:inherit;transition:.15s;}
 .content-row.lk{cursor:pointer;}
 .content-row.lk:hover{border-color:var(--pink);background:var(--pink-soft);}
@@ -140,7 +146,7 @@ textarea.iq-input{resize:vertical;}
     </div>
     <div class="brand">
       <a href="../"><div class="logo">NAO<em>story</em></div></a>
-      <div class="tagline">나오와 함께하는 데일리 매거진</div>
+      <div class="tagline">소통과 게임으로 노는 데일리 매거진</div>
     </div>
     <div class="right">
       <button class="btn-join" onclick="openInquiry()">문의</button>
@@ -177,6 +183,7 @@ textarea.iq-input{resize:vertical;}
         <div class="content-list" id="contentList">
           <div class="content-row"><span class="ctitle" style="color:var(--soft)">관리자에서 등록해 주세요</span></div>
         </div>
+        <div class="cpager" id="contentPager"></div>
       </section>
       <section class="sec">
         <div class="sec-head"><span class="en">Links</span><span class="ko">바로가기</span></div>
@@ -186,7 +193,7 @@ textarea.iq-input{resize:vertical;}
           <a class="link-btn" id="linkFancim" href="https://fancimm.com/profile/171584" target="_blank">💜 팬심</a>
           <a class="link-btn" id="linkCafe" href="https://cafe.naver.com/soopkimnao" target="_blank">💚 카페</a>
           <a class="link-btn" id="linkSoop" href="https://www.sooplive.com/station/spkimnao" target="_blank">🟦 SOOP</a>
-          <a class="link-btn wide" id="linkHeart" href="https://fancimm.com/profile/171584" target="_blank">❤️ 팬심M 입장 코드는 문의해 주세요!</a>
+          <a class="link-btn wide" id="linkHeart" href="https://fancimm.com/profile/171584" target="_blank">💙 팬심M 입장 코드는 문의해 주세요!</a>
         </div>
       </section>
   </div></div>
@@ -227,24 +234,40 @@ function _chiprow(id, lab, arr, cls){
 }
 function _href(id, u){ if(!u || u === '#') return; var el = document.getElementById(id); if(el) el.href = u; }
 
+var CONTENTS=[], CPAGE=1, CPER=5;
 async function loadContents(){
   if(typeof fetchAll !== 'function') return;
   try{
-    var rows = await fetchAll('contents', { order: 'date', asc: false });
-    var el = document.getElementById('contentList'); if(!el) return;
-    if(!Array.isArray(rows) || !rows.length){
-      el.innerHTML = '<div class="content-row"><span class="ctitle" style="color:var(--soft)">아직 등록된 컨텐츠가 없어요</span></div>';
-      return;
-    }
-    el.innerHTML = rows.map(function(c){
-      var lk = (c.link||'').trim();
-      var inner = '<span class="cdate">'+_esc(c.date||'')+'</span><span class="ctitle">'+_esc(c.title||'')+'</span>'+(lk?'<span class="cchev">›</span>':'');
-      return lk
-        ? '<a class="content-row lk" href="'+_esc(lk)+'" target="_blank" rel="noopener">'+inner+'</a>'
-        : '<div class="content-row">'+inner+'</div>';
-    }).join('');
+    CONTENTS = await fetchAll('contents', { order: 'date', asc: false }) || [];
+    CPAGE = 1;
+    renderContents();
   }catch(e){ console.error('loadContents', e); }
 }
+function renderContents(){
+  var el = document.getElementById('contentList'); if(!el) return;
+  if(!Array.isArray(CONTENTS) || !CONTENTS.length){
+    el.innerHTML = '<div class="content-row"><span class="ctitle" style="color:var(--soft)">아직 등록된 컨텐츠가 없어요</span></div>';
+    var pg0=document.getElementById('contentPager'); if(pg0) pg0.innerHTML='';
+    return;
+  }
+  var total=Math.max(1,Math.ceil(CONTENTS.length/CPER));
+  if(CPAGE>total) CPAGE=total;
+  var start=(CPAGE-1)*CPER;
+  el.innerHTML = CONTENTS.slice(start,start+CPER).map(function(c){
+    var lk = (c.link||'').trim();
+    var inner = '<span class="cdate">'+_esc(c.date||'')+'</span><span class="ctitle">'+_esc(c.title||'')+'</span>'+(lk?'<span class="cchev">›</span>':'');
+    return lk
+      ? '<a class="content-row lk" href="'+_esc(lk)+'" target="_blank" rel="noopener">'+inner+'</a>'
+      : '<div class="content-row">'+inner+'</div>';
+  }).join('');
+  var pg=document.getElementById('contentPager'); if(!pg) return;
+  if(total<=1){ pg.innerHTML=''; return; }
+  var h='<button class="cpg-btn" '+(CPAGE<=1?'disabled':'')+' onclick="cgoPage('+(CPAGE-1)+')">‹</button>';
+  for(var i=1;i<=total;i++){ h+='<button class="cpg-btn'+(i===CPAGE?' on':'')+'" onclick="cgoPage('+i+')">'+i+'</button>'; }
+  h+='<button class="cpg-btn" '+(CPAGE>=total?'disabled':'')+' onclick="cgoPage('+(CPAGE+1)+')">›</button>';
+  pg.innerHTML=h;
+}
+function cgoPage(p){ CPAGE=p; renderContents(); var s=document.getElementById('contentList'); if(s)s.scrollIntoView({behavior:'smooth',block:'nearest'}); }
 
 async function loadProfile(){
   if(typeof db === 'undefined' || !db) return;

@@ -169,7 +169,7 @@ textarea.iq-input{resize:vertical;}
     </div>
     <div class="brand">
       <a href="../"><div class="logo">NAO<em>story</em></div></a>
-      <div class="tagline">나오와 함께하는 데일리 매거진</div>
+      <div class="tagline">소통과 게임으로 노는 데일리 매거진</div>
     </div>
     <div class="right">
       <button class="btn-join" onclick="openInquiry()">문의</button>
@@ -193,7 +193,7 @@ textarea.iq-input{resize:vertical;}
       <div class="sec-head"><span class="en">Wardrobe</span><span class="ko">김나오의 옷장</span><span class="more">CLOSET</span></div>
 
       <div class="closet-bar">
-        <button id="btn-new" class="on" onclick="setMode('new')">✨ 이달의 의상</button>
+        <button id="btn-new" class="on" onclick="setMode('new')">✨ 새 옷 (포스터)</button>
         <button id="btn-old" onclick="setMode('old')">🗂 기존 옷</button>
       </div>
 
@@ -245,7 +245,7 @@ textarea.iq-input{resize:vertical;}
 
 /* 옷장 토글 + 분류 + 라이트박스 (데이터-드리븐 단일 렌더) */
 var mode='new', cat='outfit', page=1;
-var PER_PAGE=6;
+var PER_PAGE=8;
 var CATK={outfit:'의상',hair:'헤어'};
 /* 시안용 기본 데이터 (DB 연결되면 덮어씀) */
 var ITEMS=[
