@@ -331,12 +331,16 @@ setTimeout(_reveal,1800);
 /* 문의 모달 */
 function openInquiry(){document.getElementById('iq-ov').classList.add('on');document.getElementById('iq-nick').focus();}
 function closeInquiry(){document.getElementById('iq-ov').classList.remove('on');document.getElementById('iq-status').textContent='';}
-function sendInquiry(){
+async function sendInquiry(){
   var n=document.getElementById('iq-nick').value.trim();
+  var m=document.getElementById('iq-msg').value.trim();
   var s=document.getElementById('iq-status');
-  if(!n){s.textContent='닉네임을 입력해 주세요!';return;}
-  s.textContent='보냈어요! (시안 미리보기라 실제 저장은 안 돼요 💙)';
-  setTimeout(closeInquiry,1400);
+  if(!n){if(s)s.textContent='닉네임을 입력해 주세요!';return;}
+  if(!m){if(s)s.textContent='문의 내용을 적어주세요!';return;}
+  if(typeof insertRow!=='function'){if(s)s.textContent='아직 서버 연결 전이에요 💙';return;}
+  var ok=await insertRow('inquiries',{nickname:n,message:m});
+  if(ok){if(s)s.textContent='보냈어요! 💙';document.getElementById('iq-nick').value='';document.getElementById('iq-msg').value='';setTimeout(closeInquiry,1400);}
+  else{if(s)s.textContent='전송 실패 ㅠㅠ 잠시 후 다시 시도해 주세요';}
 }
 
 /* fx 입자 (.fxfb 전용) */

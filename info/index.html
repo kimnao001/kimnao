@@ -179,14 +179,6 @@ textarea.iq-input{resize:vertical;}
         </div>
       </section>
       <section class="sec">
-        <div class="sec-head"><span class="en">VOD</span><span class="ko">다시보기 · 클립</span><span class="more">REPLAY</span></div>
-        <div class="vod-grid" id="vodGrid">
-          <div class="vod-card"><div class="vod-thumb"><span class="tag">SOOP VOD</span><span class="play">▶</span></div><div class="vod-title">🎤 데뷔 방송</div></div>
-          <div class="vod-card"><div class="vod-thumb"><span class="tag">SOOP VOD</span><span class="play">▶</span></div><div class="vod-title">🎮 서든어택</div></div>
-          <div class="vod-card"><div class="vod-thumb"><span class="tag">SOOP VOD</span><span class="play">▶</span></div><div class="vod-title">🎙️ 소통 방송</div></div>
-        </div>
-      </section>
-      <section class="sec">
         <div class="sec-head"><span class="en">Links</span><span class="ko">바로가기</span></div>
         <div class="links">
           <a class="link-btn" id="linkYoutube" href="https://www.youtube.com/@spkimnao" target="_blank">▶️ YouTube</a>
@@ -234,24 +226,6 @@ function _chiprow(id, lab, arr, cls){
   if(arr.length) el.innerHTML = '<span class="lab">'+lab+'</span>' + arr.map(function(x){return '<span class="chip'+(cls?' '+cls:'')+'">'+_esc(x)+'</span>';}).join('');
 }
 function _href(id, u){ if(!u || u === '#') return; var el = document.getElementById(id); if(el) el.href = u; }
-
-async function loadOriginalSongs(){
-  if(typeof fetchAll !== 'function') return;
-  try{
-    var rows = await fetchAll('original_songs', { order: 'id', asc: false });
-    if(!Array.isArray(rows) || !rows.length) return;
-    var g = document.getElementById('vodGrid'); if(!g) return;
-    g.innerHTML = rows.map(function(v){
-      if(v.vod_id){
-        return '<div class="vod-card"><div class="vod-thumb" style="padding:0;overflow:hidden">'
-          + '<iframe src="https://vod.sooplive.co.kr/player/'+_esc(v.vod_id)+'/embed" style="width:100%;height:100%;border:0" allowfullscreen></iframe>'
-          + '</div><div class="vod-title">'+_esc(v.title||'')+'</div></div>';
-      }
-      var thumb = v.thumbnail ? ' style="background:url(\''+_esc(v.thumbnail)+'\') center/cover no-repeat"' : '';
-      return '<div class="vod-card"><div class="vod-thumb"'+thumb+'><span class="tag">SOOP VOD</span><span class="play">▶</span></div><div class="vod-title">'+_esc(v.title||'')+'</div></div>';
-    }).join('');
-  }catch(e){ console.error('loadOriginalSongs', e); }
-}
 
 async function loadContents(){
   if(typeof fetchAll !== 'function') return;
@@ -305,7 +279,6 @@ async function loadProfile(){
 }
 function _reveal(){var mc=document.getElementById("mainContent");if(mc)mc.style.opacity="1";}
 loadProfile().then(_reveal).catch(_reveal);
-loadOriginalSongs();
 loadContents();
 setTimeout(_reveal,1800);
 
