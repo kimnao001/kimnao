@@ -57,7 +57,6 @@
       <button class="tab-btn" onclick="switchTab('profile',this)">🎀 프로필</button>
       <button class="tab-btn" onclick="switchTab('schedule',this)">📅 일정</button>
       <button class="tab-btn" onclick="switchTab('work',this)">⚡ 업보</button>
-      <button class="tab-btn" onclick="switchTab('song',this)">🎵 노래</button>
       <button class="tab-btn" onclick="switchTab('dress',this)">👗 옷장</button>
       <button class="tab-btn" onclick="switchTab('inquiry',this)">✉️ 문의</button>
     </div>
@@ -177,7 +176,7 @@
       <div class="card-title">📺 다시보기 / 클립 (VOD)</div>
       <p style="font-size:12px;color:var(--text-soft);margin:0 0 12px">프로필 'VOD' 섹션에 표시돼요. SOOP 주소 <code>sooplive.com/아이디/v/<b>194780409</b></code> 의 <b>숫자 ID</b>만 입력하세요.</p>
       <div class="form-grid">
-        <div class="form-field full"><label class="input-label">제목 *</label><input class="input" id="os-title" placeholder="예: 🎤 데뷔 첫 노래방송"></div>
+        <div class="form-field full"><label class="input-label">제목 *</label><input class="input" id="os-title" placeholder="예: 🎬 데뷔 첫 방송"></div>
         <div class="form-field"><label class="input-label">VOD / 클립 ID *</label><input class="input" id="os-vod" placeholder="194780409"></div>
         <div class="form-field"><label class="input-label">썸네일 URL (선택)</label><input class="input" id="os-thumb" type="url" placeholder="https://... (비우면 ▶ 카드)"></div>
         <div class="form-field full" style="display:flex;justify-content:flex-end"><button class="btn btn-primary" onclick="addOriginalSong()">+ 추가</button></div>
@@ -322,28 +321,6 @@
     </div>
   </div>
 
-  <!-- 노래 탭 -->
-  <div class="tab-panel" id="tab-song">
-    <div class="card">
-      <div class="card-title">곡 추가</div>
-      <div class="form-grid">
-        <div class="form-field"><label class="input-label">장르</label>
-          <select class="input" id="song-genre"><option>K-Pop</option><option>J-Pop</option><option>Pop</option><option>애교송</option><option>기타</option></select>
-        </div>
-        <div class="form-field"><label class="input-label">아티스트</label><input class="input" id="song-artist" placeholder="아티스트명"></div>
-        <div class="form-field"><label class="input-label">제목 *</label><input class="input" id="song-title" placeholder="곡명"></div>
-        <div class="form-field"><label class="input-label">난이도 (1~5)</label><input class="input" id="song-diff" type="number" min="1" max="5" value="3"></div>
-        <div class="form-field full" style="display:flex;justify-content:flex-end"><button class="btn btn-primary" onclick="addSong()">+ 추가</button></div>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-title">노래 목록</div>
-      <input class="input" id="song-search" placeholder="🔍 검색..." style="margin-bottom:12px" oninput="renderSongs()">
-      <div class="table-wrap"><table><thead><tr><th>제목</th><th>아티스트</th><th>장르</th><th>난이도</th><th>삭제</th></tr></thead>
-      <tbody id="song-list"><tr><td colspan="5"><div class="spinner"></div></td></tr></tbody></table></div>
-    </div>
-  </div>
-
   <!-- 옷장 탭 -->
   <div class="tab-panel" id="tab-dress">
     <div class="card">
@@ -406,7 +383,7 @@
       document.getElementById('loginOverlay').style.display = 'none';
       document.getElementById('adminBody').style.display = 'flex';
       loadProfileFields(); loadOriginalSongs();
-      loadSchedule(); loadWork(); loadSong(); loadDress(); loadInquiry();
+      loadSchedule(); loadWork(); loadDress(); loadInquiry();
     } else {
       document.getElementById('loginErr').textContent = '비밀번호가 틀렸어요 >﹏<';
     }
@@ -673,32 +650,6 @@
     if (!confirm('정말 삭제?')) return;
     const ok = await deleteRow(table, id);
     if (ok) { showToast('🗑 삭제!'); fn(); } else showToast('❌ 실패');
-  }
-
-  // ── 노래 ──
-  let songData = [];
-  async function loadSong() {
-    songData = await fetchAll('songs', { order: 'id', asc: true });
-    renderSongs();
-  }
-  function renderSongs() {
-    const q = (document.getElementById('song-search')?.value || '').trim().toLowerCase();
-    const list = songData.filter(s => !q || (s.title||'').toLowerCase().includes(q) || (s.artist||'').toLowerCase().includes(q));
-    const t = document.getElementById('song-list');
-    if (!songData.length) { t.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#ccc;padding:20px">없음</td></tr>'; return; }
-    t.innerHTML = list.map(s => {
-      const d = parseInt(s.difficulty)||0; let stars=''; for(let k=1;k<=d;k++) stars+='⭐';
-      return `<tr><td>${s.title}</td><td>${s.artist||'-'}</td><td><span class="badge badge-pink">${s.genre||'기타'}</span></td><td>${stars||'-'}</td><td><button class="delete-btn" onclick="del('songs',${s.id},loadSong)">🗑</button></td></tr>`;
-    }).join('');
-  }
-  async function addSong() {
-    const title = document.getElementById('song-title').value.trim();
-    if (!title) { showToast('❗ 제목 필수!'); return; }
-    let diff = parseInt(document.getElementById('song-diff').value)||3;
-    diff = Math.min(5, Math.max(1, diff));
-    const ok = await insertRow('songs', { title, artist: document.getElementById('song-artist').value.trim(), genre: document.getElementById('song-genre').value, difficulty: diff });
-    if (ok) { showToast('✅ 추가!'); document.getElementById('song-title').value=''; document.getElementById('song-artist').value=''; loadSong(); }
-    else showToast('❌ 실패');
   }
 
   // ── 문의 ──
