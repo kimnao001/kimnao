@@ -57,6 +57,8 @@
       <button class="tab-btn" onclick="switchTab('profile',this)">🎀 프로필</button>
       <button class="tab-btn" onclick="switchTab('schedule',this)">📅 일정</button>
       <button class="tab-btn" onclick="switchTab('work',this)">⚡ 업보</button>
+      <button class="tab-btn" onclick="switchTab('notice',this)">📢 공지</button>
+      <button class="tab-btn" onclick="switchTab('video',this)">🎬 영상</button>
       <button class="tab-btn" onclick="switchTab('dress',this)">👗 옷장</button>
       <button class="tab-btn" onclick="switchTab('inquiry',this)">✉️ 문의</button>
     </div>
@@ -335,6 +337,42 @@
     </div>
   </div>
 
+  <!-- 공지 탭 -->
+  <div class="tab-panel" id="tab-notice">
+    <div class="card">
+      <div class="card-title">📢 공지 추가</div>
+      <div class="form-grid">
+        <div class="form-field full"><label class="input-label">제목 *</label><input class="input" id="noti-title" placeholder="공지 제목"></div>
+        <div class="form-field full"><label class="input-label">내용</label><textarea class="input" id="noti-content" rows="4" placeholder="공지 내용"></textarea></div>
+        <div class="form-field full"><label class="input-label">이미지 링크 (선택 · 쉼표로 여러 개)</label><input class="input" id="noti-image" type="text" placeholder="https://stimg.sooplive.com/...png"></div>
+        <div class="form-field"><label><input type="checkbox" id="noti-pin"> 📌 상단 고정</label></div>
+        <div class="form-field full" style="display:flex;justify-content:flex-end"><button class="btn btn-primary" onclick="addNotice()">+ 추가</button></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">공지 목록</div>
+      <div class="table-wrap"><table><thead><tr><th>제목</th><th>고정</th><th>날짜</th><th>삭제</th></tr></thead>
+      <tbody id="noti-list"><tr><td colspan="4"><div class="spinner"></div></td></tr></tbody></table></div>
+    </div>
+  </div>
+
+  <!-- 영상 탭 -->
+  <div class="tab-panel" id="tab-video">
+    <div class="card">
+      <div class="card-title">🎬 영상 추가</div>
+      <p style="font-size:12px;color:var(--text-soft);margin:0 0 12px">유튜브는 <b>주소나 영상 ID</b>를 그대로 붙여넣으면 돼요. VOD는 SOOP 다시보기 주소 <code>sooplive.com/아이디/v/<b>숫자</b></code> 의 숫자만.</p>
+      <div class="form-grid">
+        <div class="form-field"><label class="input-label">분류</label>
+          <select class="input" id="vd-cat"><option value="long">롱폼 (유튜브)</option><option value="short">숏폼 (유튜브)</option><option value="vod">VOD (SOOP)</option></select>
+        </div>
+        <div class="form-field"><label class="input-label">제목 *</label><input class="input" id="vd-title" placeholder="영상 제목"></div>
+        <div class="form-field full"><label class="input-label">영상 주소 또는 ID *</label><input class="input" id="vd-id" placeholder="https://youtu.be/... 또는 ID / VOD 숫자"></div>
+        <div class="form-field full" style="display:flex;justify-content:flex-end"><button class="btn btn-primary" onclick="addVideo()">+ 추가</button></div>
+      </div>
+      <div id="vd-list" style="margin-top:6px"><div class="spinner"></div></div>
+    </div>
+  </div>
+
   <!-- 옷장 탭 -->
   <div class="tab-panel" id="tab-dress">
     <div class="card">
@@ -398,6 +436,7 @@
       document.getElementById('adminBody').style.display = 'flex';
       loadProfileFields(); loadOriginalSongs(); loadContents();
       loadSchedule(); loadWork(); loadDress(); loadInquiry();
+      loadNotice(); loadVideo();
     } else {
       document.getElementById('loginErr').textContent = '비밀번호가 틀렸어요 >﹏<';
     }
@@ -448,19 +487,38 @@
   async function addNotice() {
     const title = document.getElementById('noti-title').value.trim();
     if (!title) { showToast('❗ 제목 필수!'); return; }
-    let image_url = null; let images = [];
-    const files = document.getElementById('noti-image').files;
-    if (files.length) {
-      showToast(`🖼 이미지 ${files.length}장 업로드 중...`);
-      for (const f of files) {
-        const url = await uploadImage(f, 'notice');
-        if (url) images.push(url);
-      }
-      if (!images.length) { showToast('❌ 이미지 업로드 실패'); return; }
-      image_url = images[0];
-    }
+    const raw = document.getElementById('noti-image').value.trim();
+    const images = raw ? raw.split(',').map(s=>s.trim()).filter(Boolean) : [];
+    const image_url = images.length ? images[0] : null;
     const ok = await insertRow('notice', { title, content: document.getElementById('noti-content').value, pinned: document.getElementById('noti-pin').checked, image_url, images });
     if (ok) { showToast('✅ 추가!'); ['noti-title','noti-content','noti-image'].forEach(id=>document.getElementById(id).value=''); document.getElementById('noti-pin').checked=false; loadNotice(); }
+    else showToast('❌ 실패');
+  }
+
+  // ── 영상 (롱폼/숏폼/VOD) ──
+  function _ytId(u){u=(u||'').trim();var m=u.match(/(?:youtu\.be\/|v=|\/shorts\/|\/embed\/|\/live\/)([\w-]{11})/);if(m)return m[1];if(/^[\w-]{11}$/.test(u))return u;return u;}
+  function _soopVod(u){u=(u||'').trim();var m=u.match(/\/v\/(\d+)|player\/(\d+)/);if(m)return m[1]||m[2];if(/^\d+$/.test(u))return u;return u;}
+  const VCAT_LABEL={long:'롱폼',short:'숏폼',vod:'VOD'};
+  async function loadVideo() {
+    const data = await fetchAll('videos', { order: 'id', asc: false });
+    const el = document.getElementById('vd-list'); if(!el) return;
+    if (!data.length) { el.innerHTML = '<div style="font-size:13px;color:#ccc;text-align:center;padding:10px">등록된 영상 없음</div>'; return; }
+    el.innerHTML = data.map(v => `
+      <div style="display:flex;align-items:center;gap:8px;padding:9px 12px;background:#fff;border:1px solid var(--main-light);border-radius:10px;margin-bottom:7px">
+        <span style="font-size:11px;font-weight:700;color:var(--main-dark);min-width:42px">${VCAT_LABEL[v.category]||v.category}</span>
+        <span style="flex:1;font-size:14px;font-weight:600">${(v.title||'').replace(/</g,'&lt;')}</span>
+        <span style="font-size:11px;color:var(--text-soft)">${(v.video_id||'').replace(/</g,'&lt;')}</span>
+        <button class="delete-btn" onclick="del('videos',${v.id},loadVideo)">🗑</button>
+      </div>`).join('');
+  }
+  async function addVideo() {
+    const title = document.getElementById('vd-title').value.trim();
+    const cat = document.getElementById('vd-cat').value;
+    let raw = document.getElementById('vd-id').value.trim();
+    if (!title || !raw) { showToast('❗ 제목/영상 필수!'); return; }
+    const video_id = cat==='vod' ? _soopVod(raw) : _ytId(raw);
+    const ok = await insertRow('videos', { category: cat, title, video_id });
+    if (ok) { showToast('✅ 추가!'); ['vd-title','vd-id'].forEach(id=>document.getElementById(id).value=''); loadVideo(); }
     else showToast('❌ 실패');
   }
 

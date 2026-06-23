@@ -153,6 +153,8 @@ textarea.iq-input{resize:vertical;}
     <a href="../schedule/">일정</a>
     <a href="../dress/">옷장</a>
     <a href="../work/">업보</a>
+    <a href="../notice/">공지</a>
+    <a href="../video/">영상</a>
   </div></nav>
   <div class="wrap"><div class="sections" id="mainContent" style="opacity:0;transition:opacity .3s ease">
       <section class="sec">
@@ -168,14 +170,6 @@ textarea.iq-input{resize:vertical;}
           <div class="info-row"><span class="k">시그니처</span><span class="v" data-pf="signature">🍀 나오와 함께하는 데일리 매거진</span></div>
           <div class="info-row" id="fandomRow" style="display:none"><span class="k">팬닉</span><span class="v" data-pf="info-fandom"></span></div>
           <div class="info-row" id="daysRow" style="display:none"><span class="k">방송요일</span><span class="v" id="daysVal"></span></div>
-        </div>
-      </section>
-      <section class="sec">
-        <div class="sec-head"><span class="en">TMI &amp; Taste</span><span class="ko">소소한 취향</span></div>
-        <div class="tmi-list">
-            <div class="tmi-row"><span class="tmi-ic">🍚</span><div><div class="tmi-k">최애 음식</div><div id="tmiFood"><span class="tmi-v">관리자에서 수정</span></div></div></div>
-            <div class="tmi-row"><span class="tmi-ic">🎵</span><div><div class="tmi-k">요즘 듣는 노래</div><div id="tmiSong"><span class="tmi-v">관리자에서 수정</span></div></div></div>
-            <div class="tmi-row"><span class="tmi-ic">🎮</span><div><div class="tmi-k">요즘 하는 게임</div><div id="tmiGame"><span class="tmi-v">서든어택</span></div></div></div>
         </div>
       </section>
       <section class="sec">
@@ -291,11 +285,6 @@ async function loadProfile(){
       if(k === 'intro'){ el.innerHTML = _esc(sv[k]).replace(/\n/g,'<br>'); }
       else { el.textContent = sv[k]; }
     });
-
-    /* TMI (쉼표 구분 -> 칩) */
-    _chipsFromCsv('tmiFood', sv['tmi-food'], 'tmi-v');
-    _chipsFromCsv('tmiSong', sv['tmi-song'], 'tmi-v');
-    _chipsFromCsv('tmiGame', sv['tmi-game'], 'tmi-v');
 
     /* 링크 */
     _href('linkYoutube', sv['link-youtube']);

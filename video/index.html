@@ -81,43 +81,21 @@ textarea.iq-input{resize:vertical;}
 @media(max-width:880px){.brand .logo{font-size:30px}.nav .wrap{gap:18px}}
 @media(max-width:560px){.topbar .wrap{flex-wrap:wrap;justify-content:center}.social,.topbar .right{flex:none}}
 
-
-.upbo-head{display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:10px;border-bottom:2px solid var(--ink);padding-bottom:8px;margin-bottom:16px;}
-.upbo-head .ttl{display:flex;align-items:baseline;gap:13px;}
-.upbo-head .en{font-family:var(--serif);font-weight:700;font-size:23px;}
-.upbo-head .ko{font-family:var(--script-ko);font-size:24px;color:var(--pink);line-height:1;}
-.upbo-update{font-size:11.5px;color:var(--soft);border:1px solid var(--line);padding:5px 13px;border-radius:999px;}
-.vsearch{width:100%;border:1px solid var(--line);border-radius:999px;padding:12px 18px;font-size:14px;font-family:inherit;background:var(--bg);color:var(--ink);margin-bottom:22px;}
-.vsearch:focus{outline:none;border-color:var(--pink);}
-.viewer-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
-.viewer-card{background:var(--paper);border:1.5px solid var(--line);border-radius:18px;padding:20px 14px;text-align:center;cursor:pointer;transition:.2s;}
-.viewer-card:hover{transform:translateY(-3px);box-shadow:0 14px 30px rgba(40,60,80,.13);border-color:var(--pink);}
-.vav{position:relative;width:62px;height:62px;margin:0 auto 10px;}
-.vav .fb{position:absolute;inset:0;border-radius:50%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--blue),var(--pink-dark));color:#fff;font-weight:800;font-size:24px;font-family:var(--serif);border:3px solid var(--pink-soft);}
-.vav img{position:absolute;inset:0;width:100%;height:100%;border-radius:50%;object-fit:cover;border:3px solid var(--pink-soft);background:var(--pink-soft);}
-.vav img.hide{display:none;}
-.viewer-nick{font-family:var(--serif-ko);font-size:14.5px;font-weight:700;}
-.viewer-id{font-size:11px;color:var(--soft);margin:2px 0 9px;}
-.viewer-total{display:inline-block;background:var(--pink);color:#fff;border-radius:999px;padding:3px 14px;font-size:12px;font-weight:800;}
-.vempty{grid-column:1/-1;text-align:center;color:var(--soft);padding:40px 0;font-family:var(--serif-ko);}
-.vm-ov{position:fixed;inset:0;background:rgba(20,40,50,.5);backdrop-filter:blur(3px);display:none;align-items:center;justify-content:center;z-index:400;padding:20px;}
-.vm-ov.on{display:flex;}
-.vm-modal{background:var(--paper);border:1px solid var(--line);border-radius:20px;width:100%;max-width:400px;max-height:82vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 24px 60px rgba(20,40,50,.3);}
-.vm-top{display:flex;align-items:center;gap:13px;padding:20px 22px 16px;border-bottom:1px solid var(--line);position:relative;}
-.vm-av{width:52px;height:52px;border-radius:50%;object-fit:cover;border:3px solid var(--pink-soft);background:var(--pink-soft);flex-shrink:0;}
-.vm-av-fb{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--blue),var(--pink-dark));color:#fff;font-size:20px;font-weight:800;border:3px solid var(--pink-soft);flex-shrink:0;font-family:var(--serif);}
-.vm-nick{font-family:var(--serif-ko);font-size:18px;font-weight:800;color:var(--pink-dark);}
-.vm-id{font-size:12px;color:var(--soft);}
-.vm-x{position:absolute;top:16px;right:18px;font-size:22px;color:var(--soft);line-height:1;}
-.vm-body{padding:14px 18px 20px;overflow-y:auto;}
-.upbo-row{display:flex;align-items:center;gap:10px;padding:11px 14px;margin-bottom:7px;background:var(--pink-soft);border-radius:12px;}
-.upbo-row .nm{flex:1;font-size:14px;font-weight:600;}
-.upbo-row .ev{font-size:10px;font-weight:800;color:#b07d18;background:#fff0d6;padding:2px 8px;border-radius:999px;}
-.upbo-row .ct{font-family:var(--serif);font-size:14px;font-weight:800;color:var(--pink-dark);background:var(--bg);border:1.5px solid var(--line);border-radius:999px;padding:3px 12px;min-width:42px;text-align:center;}
-.vm-empty{text-align:center;color:var(--soft);padding:30px;font-family:var(--serif-ko);}
-body.dark .upbo-row .ev{background:#3a2f18;color:#e7c989;}
-@media(max-width:680px){.viewer-grid{grid-template-columns:repeat(2,1fr)}}
-
+/* ===== 영상 ===== */
+.vtabs{display:flex;gap:8px;margin-bottom:22px;flex-wrap:wrap;}
+.vtabs button{font-family:var(--serif-ko);font-size:15px;font-weight:700;color:var(--soft);background:transparent;border:1px solid var(--line);border-radius:999px;padding:8px 22px;cursor:pointer;transition:.15s;}
+.vtabs button:hover{border-color:var(--pink);color:var(--pink-dark);}
+.vtabs button.on{background:var(--pink);color:#fff;border-color:var(--pink);}
+.vgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;}
+.vgrid.short{grid-template-columns:repeat(3,1fr);}
+.vcard{border:1px solid var(--line);border-radius:13px;overflow:hidden;background:var(--paper);transition:transform .15s;}
+.vcard:hover{transform:translateY(-3px);}
+.vembed{position:relative;width:100%;aspect-ratio:16/9;background:#000;}
+.vgrid.short .vembed{aspect-ratio:9/16;}
+.vembed iframe{position:absolute;inset:0;width:100%;height:100%;border:0;}
+.vtitle{padding:12px 14px;font-size:14px;font-weight:600;color:var(--ink);line-height:1.5;}
+.vempty{grid-column:1/-1;text-align:center;color:var(--soft);padding:46px 0;font-family:var(--serif-ko);}
+@media(max-width:680px){.vgrid,.vgrid.short{grid-template-columns:1fr 1fr;}}
 </style>
 </head>
 <body>
@@ -145,20 +123,18 @@ body.dark .upbo-row .ev{background:#3a2f18;color:#e7c989;}
     <a href="../info/">프로필</a>
     <a href="../schedule/">일정</a>
     <a href="../dress/">옷장</a>
-    <a href="index.html" class="active">업보</a>
+    <a href="../work/">업보</a>
     <a href="../notice/">공지</a>
-    <a href="../video/">영상</a>
+    <a href="index.html" class="active">영상</a>
   </div></nav>
   <div class="wrap"><div class="sections" id="mainContent" style="opacity:0;transition:opacity .3s ease">
-      <div class="upbo-head">
-        <div class="ttl"><span class="en">Upbo</span><span class="ko">업보 현황</span></div>
-        <span class="upbo-update">갱신일: 2026.06.20</span>
+      <div class="sec-head"><span class="en">Video</span><span class="ko">영상</span><span class="more">YOUTUBE · VOD</span></div>
+      <div class="vtabs" id="vtabs">
+        <button class="on" data-c="long" onclick="setVCat('long')">롱폼</button>
+        <button data-c="short" onclick="setVCat('short')">숏폼</button>
+        <button data-c="vod" onclick="setVCat('vod')">VOD</button>
       </div>
-      <input class="vsearch" id="vsearch" placeholder="🔍 닉네임 또는 아이디 검색...">
-      <div class="viewer-grid" id="vgrid"></div>
-      <div class="vm-ov" id="vm-ov" onclick="if(event.target===this)closeViewer()">
-        <div class="vm-modal"><div class="vm-top" id="vm-top"></div><div class="vm-body" id="vm-body"></div></div>
-      </div>
+      <div class="vgrid" id="vgrid"><div class="vempty">불러오는 중…</div></div>
   </div></div>
   </div><!-- /sheet -->
 
@@ -185,48 +161,29 @@ function openInquiry(){document.getElementById('iq-ov').classList.add('on');docu
 function closeInquiry(){document.getElementById('iq-ov').classList.remove('on');document.getElementById('iq-status').textContent='';}
 function sendInquiry(){var n=document.getElementById('iq-nick').value.trim();var s=document.getElementById('iq-status');if(!n){s.textContent='닉네임을 입력해 주세요!';return;}s.textContent='보냈어요! (시안 미리보기라 실제 저장은 안 돼요 💙)';setTimeout(closeInquiry,1400);}
 (function(){var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;var fx=document.getElementById('fx');if(fx&&!reduce){var g=['✦','♡','✧','✦'];for(var i=0;i<12;i++){var s=document.createElement('span');s.className='fxfb';s.textContent=g[i%g.length];s.style.left=(Math.random()*100)+'%';s.style.fontSize=(10+Math.random()*15)+'px';s.style.animationDuration=(10+Math.random()*9)+'s';s.style.animationDelay=(-Math.random()*15)+'s';fx.appendChild(s);}}})();
-var TYPES=[{id:1,name:'지각 입장',ev:false},{id:2,name:'채팅 도배',ev:false},{id:3,name:'졸다 걸림',ev:false},{id:4,name:'정답 맞히기',ev:true},{id:5,name:'별풍 폭격',ev:true},{id:6,name:'노래 강제신청',ev:false}];
-var VIEWERS=[{nick:'나봉수호대',soop:'nabong01',c:{1:3,2:5,4:2}},{nick:'김나오바라기',soop:'naofan',c:{5:4,4:6,6:1}},{nick:'단무지요정',soop:'danmuji',c:{1:1,3:7}},{nick:'야식담당',soop:'',c:{2:2,6:3,1:1}},{nick:'블루베리',soop:'blueb22',c:{4:1,5:2}},{nick:'나봉팬',soop:'',c:{3:2,1:4,2:1,6:2}}];
-function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-function soopAv(id){if(!id)return null;id=String(id).trim().toLowerCase();if(id.length<2)return null;return 'https://profile.img.sooplive.co.kr/LOGO/'+id.slice(0,2)+'/'+id+'/'+id+'.jpg';}
-function vtot(v){var s=0;for(var k in v.c)s+=v.c[k];return s;}
-function vrender(list){
-  var g=document.getElementById('vgrid');
-  if(!list.length){g.innerHTML='<div class="vempty">시청자가 없어요 ⚡</div>';return;}
+function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+var VID_ALL=[], vcat='long';
+function vEmbed(cat,id){
+  if(cat==='vod') return 'https://vod.sooplive.co.kr/player/'+id+'/embed';
+  return 'https://www.youtube.com/embed/'+id;
+}
+function setVCat(c){vcat=c;document.querySelectorAll('#vtabs button').forEach(function(b){b.classList.toggle('on',b.dataset.c===c);});vrenderVideos();}
+function vrenderVideos(){
+  var g=document.getElementById('vgrid'); if(!g) return;
+  g.className='vgrid'+(vcat==='short'?' short':'');
+  var list=VID_ALL.filter(function(v){return (v.category||'long')===vcat;});
+  if(!list.length){g.innerHTML='<div class="vempty">아직 영상이 없어요 🍀</div>';return;}
   g.innerHTML=list.map(function(v){
-    var av=soopAv(v.soop),ini=esc((v.nick||'?').charAt(0)),idx=VIEWERS.indexOf(v);
-    var avh='<div class="vav"><div class="fb">'+ini+'</div>'+(av?'<img src="'+av+'" alt="">':'')+'</div>';
-    return '<div class="viewer-card" onclick="openViewer('+idx+')">'+avh+'<div class="viewer-nick">'+esc(v.nick)+'</div>'+(v.soop?'<div class="viewer-id">('+esc(v.soop)+')</div>':'<div class="viewer-id">&nbsp;</div>')+'<span class="viewer-total">업보 '+vtot(v)+'</span></div>';
+    return '<div class="vcard"><div class="vembed"><iframe src="'+vEmbed(v.category,esc(v.video_id))+'" allowfullscreen loading="lazy"></iframe></div><div class="vtitle">'+esc(v.title||'')+'</div></div>';
   }).join('');
-  g.querySelectorAll('.vav img').forEach(function(im){im.onerror=function(){this.classList.add('hide');};});
 }
-function openViewer(i){
-  var v=VIEWERS[i];if(!v)return;
-  var av=soopAv(v.soop),ini=esc((v.nick||'?').charAt(0));
-  var avh=av?'<img class="vm-av" id="vmimg" src="'+av+'" alt="">':'<div class="vm-av-fb">'+ini+'</div>';
-  document.getElementById('vm-top').innerHTML=avh+'<div><div class="vm-nick">'+esc(v.nick)+'</div>'+(v.soop?'<div class="vm-id">('+esc(v.soop)+')</div>':'')+'</div><button class="vm-x" onclick="closeViewer()">✕</button>';
-  var im=document.getElementById('vmimg');if(im)im.onerror=function(){this.outerHTML='<div class="vm-av-fb">'+ini+'</div>';};
-  var rows=TYPES.filter(function(t){return (v.c[t.id]||0)>0;}).map(function(t){return '<div class="upbo-row"><span class="nm">'+esc(t.name)+'</span>'+(t.ev?'<span class="ev">이벤트</span>':'')+'<span class="ct">×'+v.c[t.id]+'</span></div>';}).join('');
-  document.getElementById('vm-body').innerHTML=rows||'<div class="vm-empty">아직 업보가 없어요 ♡</div>';
-  document.getElementById('vm-ov').classList.add('on');
-}
-function closeViewer(){document.getElementById('vm-ov').classList.remove('on');}
-document.getElementById('vsearch').addEventListener('input',function(e){var q=e.target.value.trim().toLowerCase();vrender(VIEWERS.filter(function(v){return (v.nick||'').toLowerCase().indexOf(q)>=0||(v.soop||'').toLowerCase().indexOf(q)>=0;}));});
-vrender(VIEWERS);
-async function loadWork(){
-  try{
-    var vs = await fetchAll('viewers', {order:'sort_order', asc:true});
-    var ts = await fetchAll('upbo_types', {order:'sort_order', asc:true});
-    var cs = await fetchAll('upbo_counts', {});
-    if(vs && vs.length){
-      TYPES = (ts||[]).map(function(t){return {id:t.id, name:t.name, ev:(t.category==='이벤트')};});
-      VIEWERS = vs.map(function(v){ var c={}; (cs||[]).forEach(function(x){ if(x.viewer_id===v.id && x.count>0) c[x.type_id]=x.count; }); return {nick:v.nickname, soop:v.soop_id||'', c:c}; });
-      vrender(VIEWERS);
-    }
-  }catch(err){ console.error('work', err); }
+async function loadVideos(){
+  if(typeof fetchAll!=='function'){vrenderVideos();return;}
+  try{ VID_ALL=await fetchAll('videos',{order:'id',asc:false})||[]; }catch(e){console.error('videos',e);}
+  vrenderVideos();
 }
 function _reveal(){var mc=document.getElementById("mainContent");if(mc)mc.style.opacity="1";}
-if(typeof fetchAll==='function') loadWork().then(_reveal).catch(_reveal); else _reveal();
+if(typeof fetchAll==='function') loadVideos().then(_reveal).catch(_reveal); else { vrenderVideos(); _reveal(); }
 setTimeout(_reveal,1800);
 </script>
 <script src="../fx.js"></script>
