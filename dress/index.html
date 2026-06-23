@@ -196,10 +196,8 @@ textarea.iq-input{resize:vertical;}
       </div>
 
       <div class="cats" id="cats">
-        <button class="on" data-c="white" onclick="setCat('white')">화이트</button>
-        <button data-c="black" onclick="setCat('black')">블랙</button>
-        <button data-c="outfit" onclick="setCat('outfit')">의상</button>
-        <button data-c="lens" onclick="setCat('lens')">렌즈</button>
+        <button class="on" data-c="outfit" onclick="setCat('outfit')">의상</button>
+        <button data-c="hair" onclick="setCat('hair')">헤어</button>
       </div>
 
       <div class="poster-grid new-mode" id="grid"></div>
@@ -244,18 +242,16 @@ textarea.iq-input{resize:vertical;}
 (function(){var b=document.getElementById('themeSwitch'),k=document.getElementById('themeKnob');if(localStorage.getItem('theme')==='dark')document.body.classList.add('dark');if(k)k.textContent=document.body.classList.contains('dark')?'☀️':'🌙';if(b)b.addEventListener('click',function(){var d=document.body.classList.toggle('dark');localStorage.setItem('theme',d?'dark':'light');if(k)k.textContent=d?'☀️':'🌙';});})();
 
 /* 옷장 토글 + 분류 + 라이트박스 (데이터-드리븐 단일 렌더) */
-var mode='new', cat='white', page=1;
+var mode='new', cat='outfit', page=1;
 var PER_PAGE=6;
-var CATK={white:'화이트',black:'블랙',outfit:'의상',lens:'렌즈'};
+var CATK={outfit:'의상',hair:'헤어'};
 /* 시안용 기본 데이터 (DB 연결되면 덮어씀) */
 var ITEMS=[
   {nw:1,cat:'outfit',emoji:'👗',g1:'#f8e8eb',g2:'#c97a89',title:'데일리 코디',date:'2026.01.12',img:''},
-  {nw:1,cat:'white',emoji:'💇‍♀️',g1:'#f7edef',g2:'#d08e9b',title:'화이트 코디',date:'2026.01.11',img:''},
-  {nw:1,cat:'lens',emoji:'👁️',g1:'#f3dde1',g2:'#b85a6b',title:'데일리 렌즈',date:'2026.01.10',img:''},
+  {nw:1,cat:'hair',emoji:'💇‍♀️',g1:'#f7edef',g2:'#d08e9b',title:'새 헤어',date:'2026.01.11',img:''},
   {nw:1,cat:'outfit',emoji:'🧥',g1:'#f8e8eb',g2:'#a8475a',title:'데뷔 코디',date:'2025.11.16',img:''},
-  {nw:0,cat:'black',emoji:'🎀',g1:'#f7edef',g2:'#7a2435',title:'블랙 데일리룩',date:'2025.12.20',img:''},
-  {nw:0,cat:'outfit',emoji:'👚',g1:'#f3dde1',g2:'#c97a89',title:'데일리 니트',date:'2025.12.18',img:''},
-  {nw:0,cat:'lens',emoji:'✨',g1:'#f8e8eb',g2:'#b85a6b',title:'기본 렌즈',date:'2025.12.15',img:''}
+  {nw:0,cat:'hair',emoji:'🎀',g1:'#f7edef',g2:'#7a2435',title:'기본 헤어',date:'2025.12.20',img:''},
+  {nw:0,cat:'outfit',emoji:'👚',g1:'#f3dde1',g2:'#c97a89',title:'데일리 니트',date:'2025.12.18',img:''}
 ];
 function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function setMode(m){mode=m;page=1;document.getElementById('btn-new').classList.toggle('on',m==='new');document.getElementById('btn-old').classList.toggle('on',m==='old');render();}

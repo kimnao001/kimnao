@@ -104,6 +104,13 @@ textarea.iq-input{resize:vertical;}
 .like-row .lab{font-size:14px;font-weight:800;color:var(--pink-dark);min-width:52px;}
 .chip{display:inline-flex;align-items:center;background:var(--pink-soft);color:var(--pink-dark);border-radius:999px;padding:6px 14px;font-size:13.5px;font-weight:700;}
 .chip.gray{background:var(--line);color:var(--soft);}
+.content-list{display:flex;flex-direction:column;gap:8px;}
+.content-row{display:flex;align-items:center;gap:14px;padding:13px 16px;border:1px solid var(--line);border-radius:11px;background:var(--paper);text-decoration:none;color:inherit;transition:.15s;}
+.content-row.lk{cursor:pointer;}
+.content-row.lk:hover{border-color:var(--pink);background:var(--pink-soft);}
+.content-row .cdate{font-size:13px;font-weight:800;color:var(--pink-dark);flex-shrink:0;min-width:96px;font-variant-numeric:tabular-nums;}
+.content-row .ctitle{font-size:14.5px;font-weight:600;color:var(--ink);flex:1;}
+.content-row .cchev{color:var(--soft);font-size:17px;flex-shrink:0;}
 .vod-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
 .vod-card{border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--paper);transition:transform .15s;}
 .vod-card:hover{transform:translateY(-3px);}
@@ -165,16 +172,16 @@ textarea.iq-input{resize:vertical;}
       </section>
       <section class="sec">
         <div class="sec-head"><span class="en">TMI &amp; Taste</span><span class="ko">소소한 취향</span></div>
-        <div class="cols">
-          <div class="tmi-list">
+        <div class="tmi-list">
             <div class="tmi-row"><span class="tmi-ic">🍚</span><div><div class="tmi-k">최애 음식</div><div id="tmiFood"><span class="tmi-v">관리자에서 수정</span></div></div></div>
             <div class="tmi-row"><span class="tmi-ic">🎵</span><div><div class="tmi-k">요즘 듣는 노래</div><div id="tmiSong"><span class="tmi-v">관리자에서 수정</span></div></div></div>
             <div class="tmi-row"><span class="tmi-ic">🎮</span><div><div class="tmi-k">요즘 하는 게임</div><div id="tmiGame"><span class="tmi-v">서든어택</span></div></div></div>
-          </div>
-          <div class="likes">
-            <div class="like-row" id="likesRow"><span class="lab">🍀 좋아</span><span class="chip">관리자에서 수정</span></div>
-            <div class="like-row" id="dislikesRow"><span class="lab">🚫 싫어</span><span class="chip gray">관리자에서 수정</span></div>
-          </div>
+        </div>
+      </section>
+      <section class="sec">
+        <div class="sec-head"><span class="en">Contents</span><span class="ko">진행한 컨텐츠</span></div>
+        <div class="content-list" id="contentList">
+          <div class="content-row"><span class="ctitle" style="color:var(--soft)">관리자에서 등록해 주세요</span></div>
         </div>
       </section>
       <section class="sec">
@@ -252,6 +259,25 @@ async function loadOriginalSongs(){
   }catch(e){ console.error('loadOriginalSongs', e); }
 }
 
+async function loadContents(){
+  if(typeof fetchAll !== 'function') return;
+  try{
+    var rows = await fetchAll('contents', { order: 'date', asc: false });
+    var el = document.getElementById('contentList'); if(!el) return;
+    if(!Array.isArray(rows) || !rows.length){
+      el.innerHTML = '<div class="content-row"><span class="ctitle" style="color:var(--soft)">아직 등록된 컨텐츠가 없어요</span></div>';
+      return;
+    }
+    el.innerHTML = rows.map(function(c){
+      var lk = (c.link||'').trim();
+      var inner = '<span class="cdate">'+_esc(c.date||'')+'</span><span class="ctitle">'+_esc(c.title||'')+'</span>'+(lk?'<span class="cchev">›</span>':'');
+      return lk
+        ? '<a class="content-row lk" href="'+_esc(lk)+'" target="_blank" rel="noopener">'+inner+'</a>'
+        : '<div class="content-row">'+inner+'</div>';
+    }).join('');
+  }catch(e){ console.error('loadContents', e); }
+}
+
 async function loadProfile(){
   if(typeof db === 'undefined' || !db) return;
   try{
@@ -270,10 +296,6 @@ async function loadProfile(){
     _chipsFromCsv('tmiFood', sv['tmi-food'], 'tmi-v');
     _chipsFromCsv('tmiSong', sv['tmi-song'], 'tmi-v');
     _chipsFromCsv('tmiGame', sv['tmi-game'], 'tmi-v');
-
-    /* 좋아 / 싫어 */
-    _chiprow('likesRow', '💙 좋아', [sv.like1, sv.like2, sv.like3, sv.like4], '');
-    _chiprow('dislikesRow', '🚫 싫어', [sv.dislike1, sv.dislike2], 'gray');
 
     /* 링크 */
     _href('linkYoutube', sv['link-youtube']);
@@ -295,6 +317,7 @@ async function loadProfile(){
 function _reveal(){var mc=document.getElementById("mainContent");if(mc)mc.style.opacity="1";}
 loadProfile().then(_reveal).catch(_reveal);
 loadOriginalSongs();
+loadContents();
 setTimeout(_reveal,1800);
 
 /* 다크모드 — localStorage 유지 */
